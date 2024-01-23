@@ -20,6 +20,8 @@ dependencies:
   hive_flutter:
   # connectivity_plus: ^5.0.2
   shimmer: ^3.0.0
+  animated_text_kit: ^4.2.2
+  http: ^1.2.0
   
 
 dev_dependencies:

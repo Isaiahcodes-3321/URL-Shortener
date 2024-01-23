@@ -1,8 +1,5 @@
-import 'package:flutter/material.dart';
-import 'package:url_shortener/view/export.dart';
-import 'package:url_shortener/contoller/provider.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:responsive_sizer/responsive_sizer.dart';
+import '../export.dart';
+import '../../contoller/globalControls/contolls.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -15,6 +12,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Consumer(builder: (context, ref, _) {
+      GlobalControllers.poviderRef = ref;
       return Scaffold(
         backgroundColor: AppColors.mainColor,
         body: SizedBox(
@@ -22,6 +20,7 @@ class _HomeScreenState extends State<HomeScreen> {
           height: double.infinity,
           child: Stack(
             children: [
+              HomeBody(),
               Positioned(
                   top: 10.h,
                   right: 0,
@@ -30,10 +29,14 @@ class _HomeScreenState extends State<HomeScreen> {
                           width: 15.w,
                           height: 7.h,
                           decoration: BoxDecoration(
-                            color: AppColors.drawerBackgroundIconColor,
+                            color: AppColors.drawerColor,
                             borderRadius: BorderRadius.only(
                               topLeft: Radius.circular(20.sp),
                               bottomLeft: Radius.circular(20.sp),
+                            ),
+                            border: Border.all(
+                              color: Colors.black,
+                              width: 2,
                             ),
                           ),
                           child: GestureDetector(
@@ -45,21 +48,21 @@ class _HomeScreenState extends State<HomeScreen> {
                             child: Icon(
                               Icons.menu_open,
                               size: 25.sp,
-                              color: Colors.green,
+                              color: Colors.black,
                             ),
                           ),
                         )
                       : SizedBox()),
               Positioned(
                 top: 0.h,
-                left: 0,
+                right: 0,
                 child: AnimatedContainer(
                   duration: Duration(milliseconds: 200),
                   curve: Curves.easeInOut,
                   width:
-                      ref.watch(ProviderClass.isMenuClick) == true ? 15.w : 0,
+                      ref.watch(ProviderClass.isMenuClick) == true ? 16.w : 0,
                   height: 100.h,
-                  color: Colors.red,
+                  color: Colors.white,
                   child: ref.watch(ProviderClass.isMenuClick) == true
                       ? Align(
                           alignment: Alignment.topCenter,
@@ -76,8 +79,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                                 Icon(
                                   Icons.cancel_outlined,
-                                  size: 27.sp,
-                                  color: Colors.green,
+                                  size: 30.sp,
+                                  color: Colors.black,
                                 ),
                               ],
                             ),
@@ -93,100 +96,3 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// void main() {
-//   runApp(MyApp());
-// }
-
-// class MyApp extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       home: MyHomePage(),
-//     );
-//   }
-// }
-
-// class MyHomePage extends StatelessWidget {
-//   final String textToCopy = "Hello, Clipboard!";
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: Text("Clipboard Example"),
-//       ),
-//       body: Center(
-//         child: Column(
-//           mainAxisAlignment: MainAxisAlignment.center,
-//           children: [
-//             Text(
-//               textToCopy,
-//               style: TextStyle(fontSize: 20),
-//             ),
-//             SizedBox(height: 20),
-//             IconButton(
-//               icon: Icon(Icons.content_copy),
-//               onPressed: () {
-//                 _copyToClipboard(context, textToCopy);
-//               },
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-
-//   void _copyToClipboard(BuildContext context, String text) {
-//     FlutterClipboard.copy(text).then((result) {
-//       final snackBar = SnackBar(
-//         content: Text('Text copied to clipboard'),
-//         duration: Duration(seconds: 2),
-//       );
-//       ScaffoldMessenger.of(context).showSnackBar(snackBar);
-//     });
-//   }
-// }
