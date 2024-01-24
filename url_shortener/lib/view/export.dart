@@ -1,5 +1,11 @@
+export 'package:flutter/cupertino.dart';
+export '../../contoller/globalControls/contolls.dart';
+export 'package:url_shortener/view/history/history_screen.dart';
+export 'package:url_shortener/model/apiCalling.dart';
+export 'package:flutter_spinkit/flutter_spinkit.dart';
+export 'package:animated_text_kit/animated_text_kit.dart';
+export 'package:url_shortener/contoller/screenController/controllers.dart';
 export 'package:url_shortener/contoller/constant.dart/textStyle.dart';
-export 'package:flutter/material.dart';
 export 'package:url_shortener/view/export.dart';
 export 'package:url_shortener/view/home/body.dart';
 export 'package:url_shortener/contoller/provider.dart';

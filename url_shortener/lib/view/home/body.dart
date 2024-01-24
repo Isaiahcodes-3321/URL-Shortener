@@ -1,7 +1,7 @@
 import '../export.dart';
-import 'package:url_shortener/model/apiCalling.dart';
-import 'package:animated_text_kit/animated_text_kit.dart';
-import 'package:url_shortener/contoller/globalControls/contolls.dart';
+import 'package:hive/hive.dart';
+import 'package:flutter/material.dart';
+import 'package:url_shortener/model/storage.dart';
 
 class HomeBody extends StatefulWidget {
   const HomeBody({Key? key}) : super(key: key);
@@ -84,13 +84,13 @@ class _InputURLState extends State<InputURL> {
   Widget build(BuildContext context) {
     return Consumer(builder: (context, ref, _) {
       var displayShortLink = ref.watch(ProviderClass.getShortLink);
+    
       return Padding(
         padding: EdgeInsets.only(left: 10.w, right: 10.w, top: 5.h),
         child: SingleChildScrollView(
           child: Column(
             children: [
               TextField(
-                autofocus: true,
                 controller: GlobalControllers.longLinkURL,
                 decoration: InputDecoration(
                   hintText: 'Url link',
@@ -108,6 +108,9 @@ class _InputURLState extends State<InputURL> {
                         color: AppColors.mainColor, size: 26.sp),
                     onPressed: () {
                       ApiCalling.postLongLink(context);
+                      GlobalControllers.poviderRef
+                          .read(ProviderClass.isShowingShortLink.notifier)
+                          .state = false;
                     },
                   ),
                 ),
@@ -115,7 +118,107 @@ class _InputURLState extends State<InputURL> {
               SizedBox(
                 height: 5.h,
               ),
-              Container(child: Text(displayShortLink))
+              Container(
+                  child: Column(
+                children: [
+                  ref.watch(ProviderClass.isLoading)
+                      ? SpinKitThreeInOut(
+                          color: Colors.black,
+                          size: 25.sp,
+                        )
+                      : SizedBox(),
+                  ref.watch(ProviderClass.isShowingShortLink)
+                      ? Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    displayShortLink,
+                                    softWrap: true,
+                                  ),
+                                ),
+                                GestureDetector(
+                                  onTap: () =>
+                                      ScreenControl.copyToClipboard(context),
+                                  child: Icon(Icons.copy_outlined,
+                                      color: AppColors.mainColor, size: 24.sp),
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 2.h,
+                            ),
+                            TextField(
+                              controller: GlobalControllers.description,
+                              decoration: InputDecoration(
+                                hintText: 'Add Description',
+                                hintStyle: const TextStyle(
+                                  color: Colors.grey,
+                                ),
+                                focusedBorder: UnderlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: AppColors.mainColor),
+                                ),
+                                enabledBorder: UnderlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: AppColors.mainColor),
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 15.h,
+                            ),
+                            Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20.sp),
+                                color: Colors.black,
+                              ),
+                              child: Padding(
+                                padding:
+                                    EdgeInsets.only(left: 20.w, right: 20.w),
+                                child: MaterialButton(
+                                  onPressed: () async {
+                                    ScreenControl.saveLinkAndDescription(
+                                        context);
+                                    Future.delayed(Duration(seconds: 3),
+                                        () async {
+                                      ref
+                                          .read(
+                                              ProviderClass.isLoading.notifier)
+                                          .state = false;
+                                      ref
+                                          .read(ProviderClass
+                                              .isShowingShortLink.notifier)
+                                          .state = false;
+                                      GlobalControllers.longLinkURL.clear();
+                                    });
+                                  },
+                                  child: Text('Save',
+                                      style: AppTextStyling.fontStyling()
+                                          .copyWith(
+                                              fontSize: 20.sp,
+                                              color: Colors.white)),
+                                ),
+                              ),
+                            ),
+                          ],
+                        )
+                      : TextButton(
+                          onPressed: () async {
+                            GlobalControllers.linkStorage =
+                                await Hive.openBox<LinkStorage>('storageBox');
+
+             
+                            print(
+                                'my opopopop ${GlobalControllers.linkStorage.getAt(0)}');
+                            print(
+                                'lent is ${GlobalControllers.linkStorage.length}');
+                          },
+                          child: Text('press'))
+                ],
+              ))
             ],
           ),
         ),
@@ -123,127 +226,3 @@ class _InputURLState extends State<InputURL> {
     });
   }
 }
-
-
-
-
-
-
-
-  // Row(
-  //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //             children: [
-  //               Expanded(
-  //                 child: Text(
-  //                   'ywfvdhywgvdyhvwydhwvdjwh',
-  //                   softWrap: true,
-  //                 ),
-  //               ),
-  //               Icon(Icons.copy_outlined,
-  //                   color: AppColors.mainColor, size: 24.sp),
-  //             ],
-  //           ),
-  //           SizedBox(
-  //             height: 2.h,
-  //           ),
-  //           TextField(
-  //             autofocus: true,
-  //             decoration: InputDecoration(
-  //               hintText: 'Add Description',
-  //               hintStyle: const TextStyle(
-  //                 color: Colors.grey,
-  //               ),
-  //               focusedBorder: UnderlineInputBorder(
-  //                 borderSide: BorderSide(color: AppColors.mainColor),
-  //               ),
-  //               enabledBorder: UnderlineInputBorder(
-  //                 borderSide: BorderSide(color: AppColors.mainColor),
-  //               ),
-  //               suffixIcon: IconButton(
-  //                 icon: Icon(Icons.short_text_rounded,
-  //                     color: AppColors.mainColor, size: 26.sp),
-  //                 onPressed: () {},
-  //               ),
-  //             ),
-  //           ),
-  //           SizedBox(height: 15.h,),
-  //           Container(
-  //             decoration: BoxDecoration(
-  //               borderRadius: BorderRadius.circular(20.sp),
-  //               color: Colors.black,
-  //             ),
-  //             child: Padding(
-  //               padding: EdgeInsets.only(left: 20.w, right: 20.w),
-  //               child: MaterialButton(
-  //                 onPressed: () {},
-  //                 child: Text('Save', style:  AppTextStyling.fontStyling()
-  //                                   .copyWith(fontSize: 20.sp, color: Colors.white)),
-  //               ),
-  //             ),
-  //           ),
-
-
-
-
-
-
-
-
-
-
-
-
-
-// void main() {
-//   runApp(MyApp());
-// }
-
-// class MyApp extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       home: MyHomePage(),
-//     );
-//   }
-// }
-
-// class MyHomePage extends StatelessWidget {
-//   final String textToCopy = "Hello, Clipboard!";
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: Text("Clipboard Example"),
-//       ),
-//       body: Center(
-//         child: Column(
-//           mainAxisAlignment: MainAxisAlignment.center,
-//           children: [
-//             Text(
-//               textToCopy,
-//               style: TextStyle(fontSize: 20),
-//             ),
-//             SizedBox(height: 20),
-//             IconButton(
-//               icon: Icon(Icons.content_copy),
-//               onPressed: () {
-//                 _copyToClipboard(context, textToCopy);
-//               },
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-
-//   void _copyToClipboard(BuildContext context, String text) {
-//     FlutterClipboard.copy(text).then((result) {
-//       final snackBar = SnackBar(
-//         content: Text('Text copied to clipboard'),
-//         duration: Duration(seconds: 2),
-//       );
-//       ScaffoldMessenger.of(context).showSnackBar(snackBar);
-//     });
-//   }
-// }
