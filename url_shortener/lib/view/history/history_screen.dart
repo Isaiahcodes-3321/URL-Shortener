@@ -1,9 +1,6 @@
-import 'package:hive/hive.dart';
-import 'package:shimmer/shimmer.dart';
-import 'package:flutter/material.dart';
-import 'package:clipboard/clipboard.dart';
-import 'package:url_shortener/view/export.dart';
-import 'package:url_shortener/model/storage.dart';
+import '../export.dart';
+
+
 
 class HistoryPage extends StatefulWidget {
   HistoryPage({Key? key}) : super(key: key);
@@ -19,7 +16,7 @@ class _HistoryPageState extends State<HistoryPage> {
   void initState() {
     super.initState();
     openHIve();
-    Future.delayed(Duration(seconds: 5), () {
+    Future.delayed(Duration(seconds: 3), () {
       if (mounted) {
         setState(() {
           showShimmer = false;
@@ -31,8 +28,6 @@ class _HistoryPageState extends State<HistoryPage> {
   openHIve() async {
     GlobalControllers.linkStorage =
         await Hive.openBox<LinkStorage>('storageBox');
-    final getListOfLink = Hive.box<LinkStorage>('storageBox');
-    print('my opopopop ${getListOfLink.getAt(0)?.shortLink}');
   }
 
   @override
@@ -40,9 +35,43 @@ class _HistoryPageState extends State<HistoryPage> {
     final getListOfLink = Hive.box<LinkStorage>('storageBox');
 
     return Scaffold(
+      backgroundColor: AppColors.hBackgroundColor,
       appBar: AppBar(
+        backgroundColor: AppColors.drawerBackgroundIconColor,
         elevation: 9.sp,
-        shadowColor: Colors.black,
+        shadowColor: AppColors.mainColor,
+        leading: IconButton(
+          color: AppColors.hTextColor,
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Navigator.push<void>(
+            context,
+            MaterialPageRoute<void>(
+              builder: (BuildContext context) => HomeScreen(),
+            ),
+          ),
+        ),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text('History',
+                style: AppTextStyling.fontStyling()
+                    .copyWith(fontSize: 20.sp, color: AppColors.hTextColor)),
+            GestureDetector(
+              onTap: () {
+                getListOfLink.clear();
+                Navigator.push<void>(
+                  context,
+                  MaterialPageRoute<void>(
+                    builder: (BuildContext context) => HistoryPage(),
+                  ),
+                );
+              },
+              child: Text('Empty',
+                  style: AppTextStyling.fontStyling()
+                      .copyWith(fontSize: 19.sp, color: AppColors.hTextColor)),
+            ),
+          ],
+        ),
       ),
       body: SizedBox(
           width: double.infinity,
@@ -57,10 +86,11 @@ class _HistoryPageState extends State<HistoryPage> {
                         height: 13.h,
                         child: Shimmer.fromColors(
                           direction: ShimmerDirection.rtl,
-                          baseColor: Color.fromARGB(255, 214, 214, 215),
-                          highlightColor: Color.fromARGB(255, 239, 239, 241),
+                          baseColor: const Color.fromARGB(255, 214, 214, 215),
+                          highlightColor:
+                              const Color.fromARGB(255, 239, 239, 241),
                           enabled: true,
-                          child: Card(
+                          child: const Card(
                             child: ListTile(),
                           ),
                         ),
@@ -74,41 +104,48 @@ class _HistoryPageState extends State<HistoryPage> {
                   itemBuilder: (context, index) {
                     final getListAtIndex =
                         getListOfLink.getAt(index) as LinkStorage;
-                            
+
                     return Padding(
                       padding: EdgeInsets.all(13.sp),
                       child: Container(
+                        height: 13.h,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(20),
                           border: Border.all(
-                            color: Colors.black,
+                            color: AppColors.hTextColor,
                             width: 2,
                           ),
                         ),
                         child: Padding(
-                          padding: EdgeInsets.all(13.sp),
-                          child: Expanded(
-                            flex: 5,
-                            child: Row(
-                              children: [
-                                Expanded( flex: 8,
-                                  child: Container(
-                                    color:  Colors.red,
-                                    child: Column( crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          getListAtIndex.shortLink,
-                                          // softWrap: true,
-                                        ),
-                                        Text(
-                                          getListAtIndex.description,
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            children: [
+                              SizedBox(
+                                width: 2.w,
+                              ),
+                              Expanded(
+                                  flex: 8,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      Text(getListAtIndex.shortLink,
                                           softWrap: true,
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                Expanded(
+                                          style: AppTextStyling.fontStyling()
+                                              .copyWith(
+                                                  fontSize: 17.sp,
+                                                  color: AppColors.hTextColor)),
+                                      Text(getListAtIndex.description,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: AppTextStyling.fontStyling()
+                                              .copyWith(
+                                                  fontSize: 16.sp,
+                                                  color: AppColors.hTextColor)),
+                                    ],
+                                  )),
+                              Expanded(
                                   flex: 2,
                                   child: GestureDetector(
                                     onTap: () {
@@ -125,11 +162,10 @@ class _HistoryPageState extends State<HistoryPage> {
                                       });
                                     },
                                     child: Icon(Icons.copy_outlined,
-                                        color: AppColors.mainColor, size: 24.sp),
-                                  ),
-                                )
-                              ],
-                            ),
+                                        color: AppColors.hTextColor,
+                                        size: 24.sp),
+                                  ))
+                            ],
                           ),
                         ),
                       ),
@@ -138,30 +174,3 @@ class _HistoryPageState extends State<HistoryPage> {
     );
   }
 }
-
-
-
-
-
-
-
-
-
-
-  // Column(
-  //                                 children: [
-  //                                   Expanded(
-  //                                     child: Text(
-  //                                       getListAtIndex.shortLink,
-  //                                       softWrap: true,
-  //                                     ),
-  //                                   ),
-  //                                   Expanded(
-  //                                     child: Text(
-  //                                       getListAtIndex.description,
-  //                                       softWrap: true,
-  //                                     ),
-  //                                   ),
-  //                                 ],
-  //                               ),
- 

@@ -1,6 +1,6 @@
 import '../export.dart';
 import 'package:flutter/material.dart';
-
+import 'package:flutter/cupertino.dart';
 
 
 class HomeScreen extends StatefulWidget {
@@ -16,6 +16,7 @@ class _HomeScreenState extends State<HomeScreen> {
     int historyFontSize = 15;
     return Consumer(builder: (context, ref, _) {
       GlobalControllers.poviderRef = ref;
+      var checkTheme = ref.watch(ProviderClass.themeMode);
       return Scaffold(
         backgroundColor: AppColors.mainColor,
         body: SizedBox(
@@ -38,7 +39,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               bottomLeft: Radius.circular(20.sp),
                             ),
                             border: Border.all(
-                              color: Colors.black,
+                              color: AppColors.mainColor,
                               width: 2,
                             ),
                           ),
@@ -51,7 +52,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             child: Icon(
                               Icons.menu_open,
                               size: 25.sp,
-                              color: Colors.black,
+                              color: AppColors.mainColor,
                             ),
                           ),
                         )
@@ -66,7 +67,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   width:
                       ref.watch(ProviderClass.isMenuClick) == true ? 16.w : 0,
                   height: 100.h,
-                  color: Color.fromARGB(255, 231, 231, 237),
+                  color: AppColors.drawerColor,
                   child: ref.watch(ProviderClass.isMenuClick) == true
                       ? Align(
                           alignment: Alignment.topCenter,
@@ -84,7 +85,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 Icon(
                                   Icons.cancel_outlined,
                                   size: 30.sp,
-                                  color: Colors.black,
+                                  color: AppColors.mainColor,
                                 ),
                                 SizedBox(
                                   height: 33.h,
@@ -111,7 +112,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                             borderRadius:
                                                 BorderRadius.circular(20),
                                             border: Border.all(
-                                              color: Colors.black,
+                                              color: AppColors.mainColor,
                                               width: 2,
                                             ),
                                           ),
@@ -192,9 +193,16 @@ class _HomeScreenState extends State<HomeScreen> {
                                         thumbColor: Colors.green,
                                         trackColor: const Color.fromARGB(
                                             255, 35, 35, 36),
-                                        value: false,
+                                        value: checkTheme,
                                         onChanged: (value) async {
-                                          setState(() {});
+                                          setState(() {
+                                            ref
+                                                .read(ProviderClass
+                                                    .themeMode.notifier)
+                                                .state = value;
+                                            AppColors.changeColor();
+                                            print('valuse its $checkTheme');
+                                          });
                                         },
                                       ),
                                     ],

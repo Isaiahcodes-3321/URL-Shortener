@@ -1,4 +1,3 @@
-import 'package:hive/hive.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hive_flutter/adapters.dart';
@@ -31,7 +30,7 @@ class MyApp extends StatelessWidget {
       builder: (context, orientation, screenType) {
         return const MaterialApp(
           debugShowCheckedModeBanner: false,
-          home: HomeScreen(),
+          home: SafeArea(child: HomeScreen()),
         );
       },
     );

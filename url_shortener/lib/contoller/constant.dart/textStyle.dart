@@ -1,12 +1,11 @@
 import '../../view/export.dart';
-import 'package:flutter/material.dart';
 
 
 class AppTextStyling{
 
   static TextStyle fontStyling(){
     return TextStyle(
-      color: Colors.black,
+      color: AppColors.mainColor,
       fontSize: 22.sp,
       fontWeight: FontWeight.bold
 

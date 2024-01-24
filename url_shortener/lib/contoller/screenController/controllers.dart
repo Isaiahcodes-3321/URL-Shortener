@@ -1,8 +1,4 @@
-import 'package:hive/hive.dart';
-import 'package:flutter/material.dart';
-import 'package:clipboard/clipboard.dart';
 import 'package:url_shortener/view/export.dart';
-import 'package:url_shortener/model/storage.dart';
 
 class ScreenControl {
   static copyToClipboard(
