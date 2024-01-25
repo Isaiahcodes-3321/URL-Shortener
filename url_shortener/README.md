@@ -1,16 +1,17 @@
-# url_shortener
-
+## Getting Started
 A new Flutter project.
 
-## Getting Started
+# url_shortener
 
-This project is a starting point for a Flutter application.
+Apps allow you to shorten long URLs and save them for later reuse.
 
-A few resources to get you started if this is your first Flutter project:
+## App Screenshot
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+![App Screenshot](appImage/ui1.jpg)
+*HomeScreen*
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+![Screenshot 1](appImage/ui2.jpg)
+*HomeScreen*
+
+![Screenshot 2](appImage/ui3.jpg)
+*History*

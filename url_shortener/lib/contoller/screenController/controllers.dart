@@ -1,4 +1,7 @@
 import 'package:url_shortener/view/export.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
+
+// ignore_for_file: use_build_context_synchronously
 
 class ScreenControl {
   static copyToClipboard(
@@ -19,7 +22,7 @@ class ScreenControl {
     GlobalControllers.linkStorage =
         await Hive.openBox<LinkStorage>('storageBox');
     // update short link and description to provider
-    String description =  GlobalControllers.description.text;
+    String description = GlobalControllers.description.text;
 
     var saveShortLink =
         GlobalControllers.poviderRef.watch(ProviderClass.getShortLink);
@@ -33,6 +36,23 @@ class ScreenControl {
       duration: Duration(seconds: 2),
     );
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
 
+// check if user network is connected before calling the api
+  static startInternetCheck(BuildContext context) async {
+    bool result = await InternetConnectionChecker().hasConnection;
+    if (result == false) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: AppColors.mainColor,
+          content: Text("Internet connection is needed.",
+              style: AppTextStyling.fontStyling().copyWith(
+                  fontSize: 18.sp, color: AppColors.drawerBackgroundIconColor)),
+          duration: const Duration(seconds: 4),
+        ),
+      );
+    } else {
+      ApiCalling.postLongLink(context);
+    }
   }
 }
