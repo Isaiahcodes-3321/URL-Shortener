@@ -23,6 +23,7 @@ dependencies:
   http: ^1.2.0
   clipboard: ^0.1.3
   internet_connection_checker: ^1.0.0+1
+  flutter_url_shortener: ^2.0.0
   
 
 dev_dependencies:
